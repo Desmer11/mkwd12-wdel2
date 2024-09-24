@@ -1,0 +1,2 @@
+This is new data in new_file.txt
+Appended file
