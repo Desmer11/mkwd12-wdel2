@@ -27,6 +27,7 @@ const movies = [
   { id: 1, title: "Harry Potter", rating: 5 },
   { id: 2, title: "Lord of the Rings", rating: 5 },
   { id: 3, title: "Fast and Furious", rating: 1 },
+  { id: 4, title: "Fast and Furious 2", rating: 1 },
 ];
 
 const filteredMovies = filterMoviesByRating(movies);
