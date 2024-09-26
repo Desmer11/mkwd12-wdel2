@@ -1,88 +1,55 @@
-console.log("Hello from typescript");
+import { log } from "./services/logging.service";
+import express from "express";
+import { Movie } from "./types/movie.interface";
 
-const message: string = "Hello, typescript";
-console.log(message);
+const DUMMY_DATA: Movie[] = [
+  { id: "1", title: "John Wick", genre: "Action" },
+  { id: "2", title: "John English", genre: "Comedy" },
+  { id: "3", title: "Spy Kids", genre: "Kids" },
+];
 
-// Basic types
-let isDone: boolean = true;
-let isCompleted: boolean;
-isCompleted = false;
+const server = express();
 
-let color: string = "blue";
+// this ENDPOINT is going to accessed with the HTTP method GET
+// localhost:3000
+server.get("/", (request, response) => {
+  console.log(request.url);
+  console.log(request.originalUrl);
+  console.log(request.method);
+  /**
+   * request => INCOMING REQUEST MADE TO THIS ENDPOINT
+   * response => WE CAN RETURN SOMETHING BACK TO THE USER, AS ANSWER TO THIS REQUEST
+   */
 
-const currentYear: number = 2024;
+  response.send("Hello world");
+});
 
-// Type inference
-let fullName = "John Doe";
-fullName = "Bob Bobski";
+// localhost:3000/movies
+server.get("/movies", (request, response) => {
+  response.send(DUMMY_DATA);
+});
 
-// fullName = 1231; // error
+server.get("/error", (request, response) => {
+  try {
+    console.log("TRY");
+    throw new Error(
+      JSON.stringify({ message: "Entity not found", statusCode: 404 })
+    );
+  } catch (error: any) {
+    console.log("CATCH");
+    console.log(error);
+    const parsedError = JSON.parse(error.message);
+    console.log(parsedError);
+    if (parsedError.statusCode === 404) {
+      response.status(404).send({ message: "Entity not found" });
+    }
 
-// Types on functions
-const addNumber = (numberOne: number, numberTwo: number): number => {
-  // :number => means, the return type of this function is of type number
-  return numberOne + numberTwo;
-};
+    throw new Error(error);
+  }
 
-console.log(addNumber(4, 10));
+  response.send("response ");
+});
 
-// Complex types
-interface Person {
-  firstName: string;
-  lastName: string;
-  age: number;
-  isAdult: boolean;
-  address: null | string; // union of 2 types, meaning the value may be of type null OR string
-  buildingName: undefined | string;
-
-  gender?: string; // ? => this property is optional, meaning this property may exist or may not exist in the object using this interface
-}
-
-const personOne: Person = {
-  firstName: "John",
-  lastName: "Doe",
-  age: 29,
-  isAdult: true,
-
-  address: "Some address",
-  buildingName: undefined,
-};
-
-console.log(personOne);
-
-type Animal = {
-  name: string;
-  type: string;
-};
-
-const animal: Animal = {
-  name: "Milka",
-  type: "cow",
-};
-
-console.log(animal);
-
-type UniqueID = string | number; // cannot be achieved with interfaces
-
-const orderID: UniqueID = "2";
-const secondOrderID: UniqueID = 2;
-
-type Dog = Animal & {
-  breed: string;
-};
-
-const myPet: Dog = {
-  name: "Bubi",
-  type: "small angry dog",
-  breed: "chiwawa",
-};
-
-// ANY => It is not recommended
-let randomValue: any;
-randomValue = 5;
-randomValue = "some else";
-randomValue = false;
-
-// Typescript with arrays
-
-const basket: string[] = ["Bread", "Milk", "Cherries"]; // string[] => the values in the array are going to be string
+server.listen(3000, () => {
+  console.log("Server is up and running");
+});
