@@ -1,0 +1,31 @@
+[
+  {
+    "id": "a9fba041-544e-45df-9ad1-b3338a7dd102",
+    "fromPeriod": 1727805910042,
+    "toPeriod": 1727805910042,
+    "totalAmmount": 5000,
+    "categories": [
+      {
+        "category": "gym",
+        "spentAmount": 15
+      },
+      {
+        "category": "groceries",
+        "spentAmount": 150
+      }
+    ],
+    "currency": "EUR",
+    "spentAmmount": 0,
+    "remainingAmmount": 0
+  },
+  {
+    "id": "06774770-5bd3-4094-94ea-9c98e3cc0775",
+    "fromPeriod": 1727805910042,
+    "toPeriod": 1727805910042,
+    "totalAmmount": 3500,
+    "categories": [],
+    "currency": "USD",
+    "spentAmmount": 0,
+    "remainingAmmount": 0
+  }
+]
