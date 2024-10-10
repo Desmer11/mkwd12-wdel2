@@ -1,0 +1,38 @@
+.todosContainer {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
+}
+
+.todoCard {
+  border: 1px solid #f4f4f4;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  max-width: 250px;
+}
+
+.doneTodo {
+  border: 1px solid green;
+}
+
+.doneTodo h3 {
+  color: green;
+}
+
+.pendingTodo {
+  border: 1px solid orangered;
+}
+
+.pendingTodo h3 {
+  color: orangered;
+}
+
+.inProgressTodo {
+  border: 1px solid orange;
+}
+
+.inProgressTodo h3 {
+  color: orange;
+}
