@@ -1,0 +1,28 @@
+.sidebar {
+  width: 20%;
+  height: 100vh;
+  background-color: #34495e;
+  color: #ffffff;
+  padding: 20px;
+}
+
+.sidebar ul {
+  list-style-type: none;
+}
+
+.sidebar li {
+  margin: 15px 0;
+}
+
+.sidebar a {
+  color: inherit;
+  text-decoration: none;
+}
+
+.sidebar a:hover {
+  color: #c2c2c2;
+}
+
+.sidebar a.activeLink {
+  color: #1abc9c;
+}

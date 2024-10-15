@@ -1,0 +1,26 @@
+.tableHeading {
+  border-bottom: 1px solid #ddd;
+  padding: 8px;
+}
+
+.tableData {
+  padding: 8px;
+}
+
+table {
+  margin-top: 30px;
+}
+
+.budgetsOperations {
+  display: flex;
+  gap: 30px;
+}
+
+.budgetsOperations button {
+  padding: 5px;
+  background-color: #4caf50;
+  color: #ffffff;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
