@@ -24,3 +24,7 @@ table {
   border-radius: 5px;
   cursor: pointer;
 }
+
+.deleteIcon {
+  cursor: pointer;
+}

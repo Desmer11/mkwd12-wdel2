@@ -1,18 +1,26 @@
+import { deleteBudget } from "../../services/budgets.service";
 import { Budget } from "../../types/budget.types";
 import "./Budgets.css";
 import { Link, useNavigate } from "react-router-dom";
 
 interface BudgetsProps {
   budgets: Budget[];
+  refetchBudgets: () => void; // 1.refetchBudgets is the name of the prop that we are going to provide; 2. :() => void means that the type of this prop is a function that RETURNS VOID
 }
 
 const Budgets = (props: BudgetsProps) => {
-  const { budgets } = props;
+  const { budgets, refetchBudgets } = props;
 
   const navigate = useNavigate();
 
   const onCreateNew = () => {
     navigate("/budget-create");
+  };
+
+  const handleDelete = async (budgetID: string) => {
+    // make the api request
+    await deleteBudget(budgetID);
+    refetchBudgets();
   };
 
   return (
@@ -44,6 +52,8 @@ const Budgets = (props: BudgetsProps) => {
             <th align="left" className="tableHeading">
               Remaining Amount
             </th>
+
+            <th align="left" className="tableHeading"></th>
           </tr>
         </thead>
 
@@ -68,6 +78,13 @@ const Budgets = (props: BudgetsProps) => {
 
               <td className="tableData">
                 {budget.currency} {budget.remainingAmmount}
+              </td>
+
+              <td
+                onClick={() => handleDelete(budget.id)}
+                className="tableData deleteIcon"
+              >
+                🗑️
               </td>
             </tr>
           ))}

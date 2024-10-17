@@ -7,17 +7,22 @@ import CreateBudget from "./pages/CreateBudget/CreateBudget";
 import { useEffect, useState } from "react";
 import { fetchBudgets } from "./services/budgets.service";
 import { Budget } from "./types/budget.types";
+import BudgetDetails from "./pages/BudgetDetails/BudgetDetails";
 
 function App() {
   const [budgets, setBudgets] = useState<Budget[]>([]);
 
   useEffect(() => {
-    if (budgets.length > 0) return;
-
     fetchBudgets().then((data) => {
       setBudgets(data);
     });
-  }, [budgets]); // load on initial render
+  }, []); // load on initial render
+
+  const refetchBudgets = () => {
+    fetchBudgets().then((data) => {
+      setBudgets(data);
+    });
+  };
 
   return (
     <BrowserRouter>
@@ -26,9 +31,20 @@ function App() {
         <section className="main-content">
           <Routes>
             <Route path="/" element={<Dashboard />} />
-            <Route path="/budgets" element={<Budgets budgets={budgets} />} />
-            <Route path="/budget-create" element={<CreateBudget />} />
-            <Route path="/budget/:id" element={"Budget by id"} />
+            <Route
+              path="/budgets"
+              element={
+                <Budgets budgets={budgets} refetchBudgets={refetchBudgets} />
+              }
+            />
+            <Route
+              path="/budget-create"
+              element={<CreateBudget refetchBudgets={refetchBudgets} />}
+            />
+            <Route
+              path="/budget/:id"
+              element={<BudgetDetails refetchBudgets={refetchBudgets} />}
+            />
 
             <Route path="/settings" element={"Settings"} />
           </Routes>

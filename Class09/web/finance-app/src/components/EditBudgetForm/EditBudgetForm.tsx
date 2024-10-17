@@ -1,7 +1,7 @@
 import { categories, currencySymbols } from "../../consts";
-import { createBudget } from "../../services/budgets.service";
-import { BudgetCreationProps } from "../../types/budget.types";
-import "./CreateBudget.css";
+import { updateBudget } from "../../services/budgets.service";
+import { Budget, BudgetUpdateProps } from "../../types/budget.types";
+import "./EditBudgetForm.css";
 import { useForm, useFieldArray } from "react-hook-form";
 
 interface FormData {
@@ -12,21 +12,24 @@ interface FormData {
   totalAmount: string;
 }
 
-interface CreateBudgetProps {
+interface UpdateBudgetProps {
   refetchBudgets: () => void;
+  budget: Budget;
+  refetchBudget: () => void;
 }
 
-const CreateBudget = (props: CreateBudgetProps) => {
-  const { refetchBudgets } = props;
-  const {
-    reset,
-    register,
-    handleSubmit,
-    control,
-    formState: { errors }, // Destucturing the destructured property :) SAME AS line 37 but done inline
-  } = useForm<FormData>({
+const EditBudgetForm = (props: UpdateBudgetProps) => {
+  const { refetchBudgets, budget, refetchBudget } = props;
+  const { register, handleSubmit, control } = useForm<FormData>({
     defaultValues: {
-      categories: [],
+      fromPeriod: new Date(budget.fromPeriod).toISOString().split("T")[0],
+      toPeriod: new Date(budget.toPeriod).toISOString().split("T")[0],
+      totalAmount: budget.totalAmmount.toString(),
+      currency: budget.currency,
+      categories: budget.categories.map((cat) => ({
+        category: cat.category,
+        spentAmount: cat.spentAmount.toString(),
+      })),
     },
   });
 
@@ -34,7 +37,7 @@ const CreateBudget = (props: CreateBudgetProps) => {
     console.log("formData", formData);
 
     // HERE WE MAKE API REQUEST
-    const requestBody: BudgetCreationProps = {
+    const requestBody: BudgetUpdateProps = {
       fromPeriod: new Date(formData.fromPeriod).getTime(),
       toPeriod: new Date(formData.toPeriod).getTime(),
       totalAmmount: +formData.totalAmount,
@@ -45,9 +48,9 @@ const CreateBudget = (props: CreateBudgetProps) => {
       })),
     };
 
-    await createBudget(requestBody);
+    await updateBudget(budget.id, requestBody);
     refetchBudgets();
-    reset();
+    refetchBudget();
   };
 
   const { fields, append, remove } = useFieldArray({
@@ -55,8 +58,6 @@ const CreateBudget = (props: CreateBudgetProps) => {
     name: "categories",
   });
 
-  // const { errors } = formState; // Destructuring
-  console.log(errors);
   return (
     <section className="formContainer">
       <h2 className="heading">Create new budget</h2>
@@ -74,26 +75,8 @@ const CreateBudget = (props: CreateBudgetProps) => {
             type="date"
             id="fromPeriod"
             className="input"
-            {...register("fromPeriod", {
-              required: "From period is required.", // VALIDATION RULE
-              validate: (value) => {
-                // Good for more complex validations in the field, if we return true it will mean that the field is VALID, if the field is not valid we can return the ERROR message
-                console.log("IN VALIDATE", value);
-
-                const selectedDate = new Date(value).getTime();
-                const today = new Date().getTime();
-
-                const isSelectedDateInFuture = selectedDate > today;
-
-                return (
-                  isSelectedDateInFuture || "From period must be in the future"
-                );
-              },
-            })}
+            {...register("fromPeriod")}
           />
-          {errors.fromPeriod && (
-            <span className="error">{errors.fromPeriod.message}</span>
-          )}
         </div>
 
         {/* To Period */}
@@ -105,14 +88,8 @@ const CreateBudget = (props: CreateBudgetProps) => {
             type="date"
             id="toPeriod"
             className="input"
-            {...register("toPeriod", {
-              required: "To Period is required.",
-            })}
+            {...register("toPeriod")}
           />
-
-          {errors.toPeriod && (
-            <span className="error">{errors.toPeriod.message}</span>
-          )}
         </div>
 
         {/* Total amount */}
@@ -124,14 +101,8 @@ const CreateBudget = (props: CreateBudgetProps) => {
             type="number"
             id="totalAmount"
             className="input"
-            {...register("totalAmount", {
-              required: "Total amount is required",
-            })}
+            {...register("totalAmount")}
           />
-
-          {errors.totalAmount && (
-            <span className="error">{errors.totalAmount.message}</span>
-          )}
         </div>
 
         {/* Currency */}
@@ -193,9 +164,9 @@ const CreateBudget = (props: CreateBudgetProps) => {
             Add Category
           </button>
         </div>
-        <button className="submitButton">Create</button>
+        <button className="submitButton">Update</button>
       </form>
     </section>
   );
 };
-export default CreateBudget;
+export default EditBudgetForm;
